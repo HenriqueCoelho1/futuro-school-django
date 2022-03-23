@@ -1,13 +1,10 @@
 from django.shortcuts import render, redirect
 from app_core.models import CustomUser, UserType, Course
 from . import functions
-from validate_docbr import CPF
-
-cpf_validate = CPF()
 
 
-def register_student(request):
-    template_name = "register_student.html"
+def register_teacher(request):
+    template_name = "register_teacher.html"
     context = {}
     if request.method == "GET":
         course_list = Course.objects.all()
@@ -21,18 +18,19 @@ def register_student(request):
         name = request.POST.get("name")
         email = request.POST.get("email")
         password = request.POST.get("password")
-        cpf = request.POST.get("cpf")
+        register_teacher = request.POST.get("register_teacher")
         course = request.POST.get("course")
         formdata.update(
             {
                 "username": username,
                 "name": name,
                 "email": email,
-                "cpf": cpf,
+                "register_teacher": register_teacher,
             }
         )
+        ### essa tive que tirar essa verificação porque dá invalid registration data
 
-        if None in [username, name, email, cpf]:
+        if None in [username, name, email, register_teacher]:
             valid_data = False
         if CustomUser.objects.filter(email=email).exists() or not functions.check_email(
             email
@@ -46,10 +44,10 @@ def register_student(request):
             valid_data = False
             error_param.append("name")
         if UserType.objects.filter(
-            identifier=cpf
-        ).exists() or not cpf_validate.validate(cpf):
+            identifier=register_teacher
+        ).exists() or not functions.check_username(username):
             valid_data = False
-            error_param.append("cpf")
+            error_param.append("register_teacher")
         if not functions.check_password(password):
             valid_data = False
             error_param.append("password")
@@ -64,7 +62,9 @@ def register_student(request):
             new_user.set_password(password)
             new_user.save()
             user_id = CustomUser.objects.get(email=email)
-            new_profile = UserType(user=user_id, identifier=cpf, user_type="S")
+            new_profile = UserType(
+                user=user_id, identifier=register_teacher, user_type="T"
+            )
 
             new_profile.save()
         except Exception as e:
@@ -77,8 +77,3 @@ def register_student(request):
                 {"ok": False, "errors": error_param, "formdata": formdata},
             )
         return redirect("register_student")
-
-
-def student_courses(request):
-    template_name = "student_courses.html"
-    return render(request, template_name)
