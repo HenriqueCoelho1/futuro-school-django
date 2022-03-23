@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <form class="needs-validation" method="POST" action="{% url 'register_student' %}">
+        {% csrf_token %}
+
+        <div class="form-floating mb-3">
+            <input class="form-control" id="email" name="email" type="email" placeholder="email@exemplo.com" required />
+            <label for="email">Email</label>
+        </div>
+
+        <div class="row g-2">
+            <div class="col-md">
+                <div class="form-floating mb-3">
+                    <input class="form-control" id="name" name="name" type="text" placeholder="Coloque seu nome aqui"
+                        required style="text-transform: uppercase" maxlength="50" />
+                    <label for="name">Nome</label>
+                </div>
+            </div>
+            <div class="col-md">
+                <div class="form-floating mb-3">
+                    <input class="form-control" id="username" name="username" type="text"
+                        placeholder="Coloque seu sobrenome aqui" required maxlength="50" />
+                    <label for="username">Username</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input id="cpf" name="cpf" class="form-control" type="text" placeholder="Seu CPF" required maxlength="14" />
+            <label for="cpf">CPF</label>
+        </div>
+
+
+        <div class="form-floating mb-3">
+            <input id="password" name="password" class="form-control" type="password" placeholder="*******" />
+            <label for="password">Senha</label>
+        </div>
+
+        <div>
+            {% for c in course_list %}
+            <input type="checkbox" value="{{c.id}}" name="course" id="subscribeNews">{{c.name}}
+            {% endfor %}
+        </div>
+        <!-- <select multiple name="course" placeholder="Lista de exercicios">
+            {% for c in course_list %}
+            <option value="{{c.id}}">{{c.name}}</option>
+            {% endfor %}
+        </select> -->
+
+        <!-- <div class="form-floating mb-3">
+        <input id="confirm_password" name="confirm_password" class="form-control" type="password" placeholder="*******"
+            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required onblur="check_equal_password();" />
+        <label for="confirm_password">Confirmar Senha</label>
+        <div class="invalid-feedback">As senhas não são iguais! Validar confirmação.</div>
+    </div> -->
+
+
+        <!-- Submit Button-->
+        <div class="d-grid"><button class="btn btn-primary rounded-pill btn-lg" id="submit_button"
+                type="submit">Cadastrar</button></div>
+    </form>
+
+</body>
+
+</html>
