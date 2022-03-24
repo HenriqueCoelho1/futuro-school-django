@@ -1,19 +1,24 @@
 from django.contrib import admin
-from .models import CustomUser, UserType, Course
+from .models import CustomUser, UserStudent, UserTeacher, Course
 
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
-    list_display = ("username", "email", "name", "course")
+    list_display = ("id", "username", "email", "name")
 
     # def user_type(self, obj):
     #     print()
     #     return ", ".join([m.user_type for m in print(obj.user_type.all())])
 
 
-@admin.register(UserType)
-class UserTypeAdmin(admin.ModelAdmin):
-    list_display = ("identifier", "user", "user_type")
+@admin.register(UserStudent)
+class UserStudentAdmin(admin.ModelAdmin):
+    list_display = ("user", "cpf")
+
+
+@admin.register(UserTeacher)
+class UserTeacherAdmin(admin.ModelAdmin):
+    list_display = ("user", "register")
 
 
 @admin.register(Course)

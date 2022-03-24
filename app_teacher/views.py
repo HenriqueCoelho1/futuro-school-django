@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from app_core.models import CustomUser, UserType, Course
+from app_core.models import CustomUser, Course, UserTeacher, UserStudent
+from django.contrib.auth.decorators import login_required
 from . import functions
 
 
@@ -7,7 +8,7 @@ def register_teacher(request):
     template_name = "register_teacher.html"
     context = {}
     if request.method == "GET":
-        course_list = Course.objects.all()
+        course_list = Course.objects.all().exclude(teacher__isnull=False)
         context.update({"course_list": course_list})
         return render(request, template_name, context)
     if request.method == "POST":
@@ -28,8 +29,6 @@ def register_teacher(request):
                 "register_teacher": register_teacher,
             }
         )
-        ### essa tive que tirar essa verificação porque dá invalid registration data
-
         if None in [username, name, email, register_teacher]:
             valid_data = False
         if CustomUser.objects.filter(email=email).exists() or not functions.check_email(
@@ -43,30 +42,25 @@ def register_teacher(request):
         if not functions.check_name(name):
             valid_data = False
             error_param.append("name")
-        if UserType.objects.filter(
-            identifier=register_teacher
-        ).exists() or not functions.check_username(username):
+        if UserTeacher.objects.filter(register=register_teacher).exists():
             valid_data = False
             error_param.append("register_teacher")
         if not functions.check_password(password):
             valid_data = False
             error_param.append("password")
         try:
-            print(course)
+            print("print-------->", course)
             if not valid_data:
                 raise Exception("invalid registration data!!!")
-            course_id = Course.objects.get(id=course)
-            new_user = CustomUser(
-                username=username, name=name, email=email, course=course_id
-            )
+            new_user = CustomUser(username=username, name=name, email=email)
             new_user.set_password(password)
             new_user.save()
             user_id = CustomUser.objects.get(email=email)
-            new_profile = UserType(
-                user=user_id, identifier=register_teacher, user_type="T"
-            )
-
+            course_instance = Course.objects.get(id=course)
+            new_profile = UserTeacher(user=user_id, register=register_teacher)
             new_profile.save()
+            course_instance.teacher = CustomUser.objects.get(email=email)
+            course_instance.save()
         except Exception as e:
             print(e)
             valid_data = False
@@ -77,3 +71,23 @@ def register_teacher(request):
                 {"ok": False, "errors": error_param, "formdata": formdata},
             )
         return redirect("register_student")
+
+
+@login_required
+def teacher_courses(request):
+    template_name = "teacher_courses.html"
+    user = CustomUser.objects.get(email=request.user)
+    context = {}
+    if request.method == "GET":
+        course_list = Course.objects.all().filter(teacher=user.id)
+        context.update({"course_list": course_list})
+        return render(request, template_name, context)
+
+
+def teacher_students(request):
+    template_name = "teacher_students.html"
+    context = {}
+    if request.method == "GET":
+        course_list = Course.objects.get(id=2).user_student_set.all()
+        context.update({"course_list": course_list})
+        return render(request, template_name, context)

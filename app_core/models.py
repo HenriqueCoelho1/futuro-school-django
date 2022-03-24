@@ -3,17 +3,10 @@ from django.contrib.auth.models import AbstractUser
 from .managers import UserManager
 
 
-class Course(models.Model):
-    name = models.CharField(max_length=120, null=False, blank=False)
-
-
 class CustomUser(AbstractUser):
-    username = models.CharField(max_length=100, null=False, blank=False)
-    email = models.EmailField(unique=True, null=False, blank=False)
     name = models.CharField(max_length=200, null=False, blank=False)
-    course = models.ForeignKey(
-        Course, on_delete=models.CASCADE, blank=True, null=True, default=None
-    )
+    username = models.CharField(unique=True, max_length=200, null=False, blank=False)
+    email = models.EmailField(unique=True, max_length=200, null=False, blank=False)
     objects = UserManager()
 
     USERNAME_FIELD = "email"
@@ -29,23 +22,23 @@ class CustomUser(AbstractUser):
         return f"{self.email}"
 
 
-class UserType(models.Model):
+class UserTeacher(models.Model):
     user = models.OneToOneField(
-        CustomUser, on_delete=models.PROTECT, null=True, blank=True
+        CustomUser, on_delete=models.CASCADE, related_name="teacher"
     )
-    identifier = models.CharField(
-        unique=True, max_length=30, blank=False, null=False
-    )  # cpf e registro do usuario
-    USER_TYPE_CHOICES = [
-        ["S", "STUDENT"],
-        ["T", "TEACHER"],
-    ]
-    user_type = models.CharField(
-        max_length=1, choices=USER_TYPE_CHOICES, blank=False, null=False, default="S"
+    register = models.CharField(max_length=20, null=False, blank=False)
+
+
+class Course(models.Model):
+    name = models.CharField(max_length=20)
+    teacher = models.ForeignKey(
+        UserTeacher, on_delete=models.CASCADE, null=True, blank=True
     )
 
-    class Meta:
-        verbose_name = "02 - UserType Gagau"
 
-    def __str__(self) -> str:
-        return f"{self.identifier}"
+class UserStudent(models.Model):
+    user = models.OneToOneField(
+        CustomUser, on_delete=models.CASCADE, related_name="student"
+    )
+    cpf = models.CharField(max_length=16, unique=True, blank=True, null=True)
+    courses = models.ManyToManyField(Course, related_name="students")
