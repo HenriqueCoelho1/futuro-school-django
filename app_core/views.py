@@ -12,11 +12,15 @@ def access(request):
             if user is None:
                 return render(request, "login.html", {"ok": False})
             login(request, user)
-        return redirect("login")
+        return redirect("index")
     return render(request, "login.html")
 
 
 @login_required
 def getout(request):
     logout(request)
-    return redirect("login")
+    return redirect("access")
+
+
+def index(request):
+    return render(request, "index.html")

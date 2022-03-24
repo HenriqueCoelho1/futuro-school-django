@@ -3,7 +3,7 @@
 <div class="container mt-5">
     <div class="row">
         <div class="col-md-12 mt-5">
-            <h1 class="text-center">Meus Alunos</h1>
+            <h1 class="text-center">Curso {{course.name}}</h1>
             <hr style="height: 1px; color: black; background-color: black;" />
         </div>
     </div>
@@ -12,15 +12,17 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th scope="col">Cursos</th>
-                        <th scope="col">Aluno</th>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">Email</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for c in course_list %}
+                    {% for s in student_list %}
                     <tr>
-                        <td>{{c.name}}</td>
-                        <td>{{c.teacher.name}}</td>
+                        <td>{{s.user.name}}</td>
+                        <td>{{s.user.username}}</td>
+                        <td>{{s.user.email}}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

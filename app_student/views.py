@@ -81,9 +81,11 @@ def register_student(request):
 
 @login_required
 def student_courses(request):
+    if not functions.validation_teacher_student(request):
+        return redirect("index")
     template_name = "student_courses.html"
     context = {}
     if request.method == "GET":
-        # course_list = UserStudent.objects.get(id=2).students.all()
-        # context.update({"course_list": course_list})
+        course_list = UserStudent.objects.get(user=request.user.id).courses.all()
+        context.update({"course_list": course_list})
         return render(request, template_name, context)

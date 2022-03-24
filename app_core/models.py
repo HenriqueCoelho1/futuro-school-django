@@ -35,6 +35,12 @@ class Course(models.Model):
         UserTeacher, on_delete=models.CASCADE, null=True, blank=True
     )
 
+    class Meta:
+        verbose_name = "02 - Course"
+
+    def __str__(self) -> str:
+        return f"{self.teacher}"
+
 
 class UserStudent(models.Model):
     user = models.OneToOneField(
@@ -42,3 +48,6 @@ class UserStudent(models.Model):
     )
     cpf = models.CharField(max_length=16, unique=True, blank=True, null=True)
     courses = models.ManyToManyField(Course, related_name="students")
+    like = models.ManyToManyField(
+        Course, default=None, null=True, blank=True, related_name="likes"
+    )

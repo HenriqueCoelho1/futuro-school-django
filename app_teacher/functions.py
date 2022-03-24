@@ -1,6 +1,14 @@
 import re
 
 
+def validation_teacher_student(request):
+    try:
+        print(request.user.teacher)
+        return True
+    except:
+        return False
+
+
 def check_name(name) -> bool:
     regex = r"^[a-zA-Z]+$"
     if re.fullmatch(regex, name):

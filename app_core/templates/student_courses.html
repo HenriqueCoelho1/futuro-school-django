@@ -21,7 +21,7 @@
                     {% for c in course_list %}
                     <tr>
                         <td>{{c.name}}</td>
-                        <td>{{c.teacher}}</td>
+                        <td>{{c.teacher.user.name}}</td>
                         <td>Action</td>
                     </tr>
                     {% endfor %}

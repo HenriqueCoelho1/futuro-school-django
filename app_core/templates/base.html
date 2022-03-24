@@ -21,15 +21,26 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
+                {% if user.is_authenticated and user.teacher%}
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Meus cursos</a>
+                    <a class="nav-link" href="{% url 'register_teacher_course' %}">Cadastrar-se em um novo Curso</a>
                 </li>
-                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'teacher_courses' %}">Meus cursos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'register_course' %}">Novo Curso</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'getout' %}">Sair</a>
                 </li>
-                <li>
-                    <a href="">{{user.id}}</a>
+                {% endif %}
+                {% if user.is_authenticated and user.student%}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'student_courses' %}">Meus cursos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'getout' %}">Sair</a>
                 </li>
                 {% endif %}
                 {% if user.is_authenticated == none %}
