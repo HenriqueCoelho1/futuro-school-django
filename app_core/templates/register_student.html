@@ -36,12 +36,12 @@
                     <input type="text" name="cpf" id="cpf" placeholder="CPF(Válido) sem ponto" class="form-control">
                 </div>
                 <div class="form-group">
-                    {% if course_list is none %}
-                    <div>Sem cursos no momento, espere um instrutor criar</div>
-                    {% else %}
+                    {% if course_list %}
                     {% for c in course_list %}
                     <input class="checkbox" type="checkbox" value="{{c.id}}" name="course" id="subscribeNews">{{c.name}}
                     {% endfor %}
+                    {% else %}
+                    <div>Sem cursos no momento ou cursos sem instrutor, espere um instrutor criar</div>
                     {% endif %}
                 </div>
                 <div class="form-group mt-3">
