@@ -1,11 +1,11 @@
 from django.urls import path, include
-from .views import access, getout, index
+from .views import GetOut, Access, Index
 
 
 urlpatterns = [
-    path("", index, name="index"),
-    path("login/", access, name="access"),
-    path("getout", getout, name="getout"),
+    path("", Index.as_view(), name="index"),
+    path("login/", Access.as_view(), name="access"),
+    path("getout", GetOut.as_view(), name="getout"),
     path("student/", include("app_student.urls")),
     path("teacher/", include("app_teacher.urls")),
 ]

@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12 mt-5">
-            <h1 class="text-center">Hero</h1>
+            <h1 class="text-center">Registrar Aluno</h1>
             <hr style="height: 1px; color: black; background-color: black;" />
         </div>
     </div>
@@ -16,28 +16,33 @@
                 <div id="result"></div>
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" name="email" id="email" class="form-control">
+                    <input type="email" name="email" placeholder="E-mail unico" id="email" class="form-control">
                 </div>
                 <div class="form-group">
                     <label for="name">Nome</label>
-                    <input type="text" name="name" id="name" class="form-control">
+                    <input type="text" name="name" placeholder="Nome completo" id="name" class="form-control">
                 </div>
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" name="username" id="username" class="form-control">
+                    <input type="text" name="username" placeholder="Username unico" id="username" class="form-control">
                 </div>
                 <div class="form-group">
                     <label for="address">Senha</label>
-                    <input type="password" name="password" id="password" class="form-control">
+                    <input type="password" name="password" placeholder="Nome completo" id="password"
+                        class="form-control">
                 </div>
                 <div class="form-group">
                     <label for="cpf">CPF</label>
-                    <input type="text" name="cpf" id="cpf" class="form-control">
+                    <input type="text" name="cpf" id="cpf" placeholder="CPF(Válido) sem ponto" class="form-control">
                 </div>
                 <div class="form-group">
+                    {% if course_list is none %}
+                    <div>Sem cursos no momento, espere um instrutor criar</div>
+                    {% else %}
                     {% for c in course_list %}
                     <input class="checkbox" type="checkbox" value="{{c.id}}" name="course" id="subscribeNews">{{c.name}}
                     {% endfor %}
+                    {% endif %}
                 </div>
                 <div class="form-group mt-3">
                     <button class="btn btn-primary" type="submit" id="submit_button">Cadastrar</button>

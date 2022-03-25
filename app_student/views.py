@@ -1,5 +1,7 @@
+from django.views import View
 from django.shortcuts import render, redirect
-from app_core.models import CustomUser, Course, UserStudent, UserTeacher
+from django.utils.decorators import method_decorator
+from app_core.models import CustomUser, Course, UserStudent
 from . import functions
 from django.contrib.auth.decorators import login_required
 from validate_docbr import CPF
@@ -7,14 +9,17 @@ from validate_docbr import CPF
 cpf_validate = CPF()
 
 
-def register_student(request):
-    template_name = "register_student.html"
-    context = {}
-    if request.method == "GET":
+class RegisterStudent(View):
+    def get(self, request):
+        template_name = "register_student.html"
+        context = {}
         course_list = Course.objects.all().exclude(teacher__isnull=True)
         context.update({"course_list": course_list})
         return render(request, template_name, context)
-    if request.method == "POST":
+
+    def post(self, request):
+        template_name = "register_student.html"
+        context = {}
         valid_data = True
         error_param = []
         formdata = {}
@@ -40,9 +45,9 @@ def register_student(request):
         ):
             valid_data = False
             error_param.append("email")
-        # if not functions.check_username(username):
-        #     valid_data = False
-        #     error_param.append("username")
+        if CustomUser.objects.filter(username=username).exists():
+            valid_data = False
+            error_param.append("username")
         if not functions.check_name(name):
             valid_data = False
             error_param.append("name")
@@ -55,7 +60,6 @@ def register_student(request):
             valid_data = False
             error_param.append("password")
         try:
-            print(course)
             if not valid_data:
                 raise Exception("invalid registration data!!!")
             new_user = CustomUser(username=username, name=name, email=email)
@@ -68,7 +72,6 @@ def register_student(request):
             for course_id in course:
                 user_id2.courses.add(Course.objects.get(id=course_id))
         except Exception as e:
-            print(e)
             valid_data = False
         if not valid_data:
             return render(
@@ -79,13 +82,13 @@ def register_student(request):
         return redirect("register_student")
 
 
-@login_required
-def student_courses(request):
-    if not functions.validation_teacher_student(request):
-        return redirect("index")
-    template_name = "student_courses.html"
-    context = {}
-    if request.method == "GET":
+@method_decorator(login_required, name="dispatch")
+class StudentCourses(View):
+    def get(self, request):
+        if not functions.validation_teacher_student(request):
+            return redirect("index")
+        template_name = "student_courses.html"
+        context = {}
         course_list = UserStudent.objects.get(user=request.user.id).courses.all()
         context.update({"course_list": course_list})
         return render(request, template_name, context)

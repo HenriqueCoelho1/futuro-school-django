@@ -21,7 +21,7 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
-                {% if user.is_authenticated and user.teacher%}
+                <!-- {% if user.is_authenticated and user.teacher %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'register_teacher_course' %}">Cadastrar-se em um novo Curso</a>
                 </li>
@@ -34,21 +34,47 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'getout' %}">Sair</a>
                 </li>
-                {% endif %}
-                {% if user.is_authenticated and user.student%}
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'register_teacher' %}">Registrar como Aluno</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'register_teacher' %}">Registrar como Instrutor</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'getout' %}">Login</a>
+                </li>
+                {% endif %} -->
+
+                {% if user.is_authenticated and user.student %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'student_courses' %}">Meus cursos</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'getout' %}">Sair</a>
                 </li>
-                {% endif %}
-                {% if user.is_authenticated == none %}
+                {% elif user.teacher %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    <a class="nav-link" href="{% url 'register_teacher_course' %}">Cadastrar-se em um novo Curso</a>
                 </li>
-                <li>
-                    <a href="">{{user.id}}</a>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'teacher_courses' %}">Meus cursos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'register_course' %}">Novo Curso</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'getout' %}">Sair</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'register_student' %}">Registrar como Aluno</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'register_teacher' %}">Registrar como Instrutor</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'getout' %}">Login</a>
                 </li>
                 {% endif %}
             </ul>

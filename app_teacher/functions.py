@@ -10,7 +10,7 @@ def validation_teacher_student(request):
 
 
 def check_name(name) -> bool:
-    regex = r"^[a-zA-Z]+$"
+    regex = r"^[a-zA-Z]{4,}(?: [a-zA-Z]+){0,2}$"
     if re.fullmatch(regex, name):
         return True
     else:

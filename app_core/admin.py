@@ -6,10 +6,6 @@ from .models import CustomUser, UserStudent, UserTeacher, Course
 class CustomUserAdmin(admin.ModelAdmin):
     list_display = ("id", "username", "email", "name")
 
-    # def user_type(self, obj):
-    #     print()
-    #     return ", ".join([m.user_type for m in print(obj.user_type.all())])
-
 
 @admin.register(UserStudent)
 class UserStudentAdmin(admin.ModelAdmin):

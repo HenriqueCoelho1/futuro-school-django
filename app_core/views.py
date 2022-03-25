@@ -1,10 +1,15 @@
+from django.views import View
 from django.shortcuts import render, redirect
+from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
 
 
-def access(request):
-    if request.method == "POST":
+class Access(View):
+    def get(self, request):
+        return render(request, "login.html")
+
+    def post(self, request):
         email = request.POST.get("email")
         password = request.POST.get("password")
         if email and password:
@@ -13,14 +18,15 @@ def access(request):
                 return render(request, "login.html", {"ok": False})
             login(request, user)
         return redirect("index")
-    return render(request, "login.html")
 
 
-@login_required
-def getout(request):
-    logout(request)
-    return redirect("access")
+@method_decorator(login_required, name="dispatch")
+class GetOut(View):
+    def get(self, request):
+        logout(request)
+        return redirect("access")
 
 
-def index(request):
-    return render(request, "index.html")
+class Index(View):
+    def get(self, request):
+        return render(request, "index.html")
